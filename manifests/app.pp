@@ -9,7 +9,10 @@ define idm::app (
   $venv = "${home}/venv"
   $wsgi = "${home}/app.wsgi"
   $celery_vhost = "idm-${name}-celery"
+
+  # Secrets
   $django_secret_key = hiera("idm::${name}::secret_key")
+  $amqp_password = hiera("idm::${name}::amqp_password")
 
   if $server_name != undef {
     $_server_name = "${name}.${idm::base_domain}"
@@ -24,6 +27,8 @@ define idm::app (
     "DJANGO_SETTINGS_MODULE=${app_package}.settings",
     "DJANGO_SECRET_KEY=$django_secret_key",
     "BROKER_SSL=no",
+    "BROKER_USERNAME=$user",
+    "BROKER_PASSWORD=$amqp_password",
   ]
 
   user {
@@ -34,7 +39,7 @@ define idm::app (
   }
 
   rabbitmq_user { $user:
-    password => 'bar',
+    password => $amqp_password,
   }
 
   rabbitmq_vhost { $celery_vhost:
