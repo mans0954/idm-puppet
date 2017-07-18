@@ -9,6 +9,7 @@
     {"name": "puppetlabs/apache"},
     {"name": "puppetlabs/postgresql"},
     {"name": "puppetlabs/rabbitmq"},
+    {"name": "puppetlabs/vscrepo"},
     {"name": "Aethylred/kerberos"}
   ]
 }
