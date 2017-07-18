@@ -7,12 +7,31 @@ define idm::app (
   $repo = "${home}/repo"
   $venv = "${home}/venv"
   $wsgi = "${home}/app.wsgi"
+  $celery_vhost = "idm-${name}-celery"
+
+  $application_environment = [
+    "CELERY_BROKER_URL=amqp://localhost/$celery_vhost",
+  ]
 
   user {
     $user:
       ensure => present,
       home => $home,
       managehome => true;
+  }
+
+  rabbitmq_user { $user:
+    password => 'bar',
+  }
+
+  rabbitmq_vhost { $celery_vhost:
+    ensure => present,
+  }
+
+  rabbitmq_user_permissions { "${user}@${celery_vhost}":
+    configure_permission => '.*',
+    read_permission      => '.*',
+    write_permission     => '.*',
   }
 
   vcsrepo { $repo:
