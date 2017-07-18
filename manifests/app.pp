@@ -23,6 +23,7 @@ define idm::app (
     "DJANGO_ALLOWED_HOSTS=$_server_name",
     "DJANGO_SETTINGS_MODULE=${app_package}.settings",
     "DJANGO_SECRET_KEY=$django_secret_key",
+    "BROKER_SSL=no",
   ]
 
   user {

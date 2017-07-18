@@ -9,6 +9,7 @@ class idm (
     "libxml2-dev",
     "libxmlsec1-dev",
     "libkrb5-dev",
+    "bison",
   ]
 
   package { $required_packages:
