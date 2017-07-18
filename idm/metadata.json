@@ -1,0 +1,13 @@
+{
+  "name": "alexsdutton-idm",
+  "version": "0.1.0",
+  "author": "Alexander Dutton <idm@alexdutton.co.uk>",
+  "source": "https://github.com/alexsdutton/idm-puppet",
+  "project_page": "https://github.com/alexsdutton/idm",
+  "dependencies": [
+    {"name": "puppetlabs/apache"},
+    {"name": "puppetlabs/postgresql"},
+    {"name": "puppetlabs/rabbitmq"},
+    {"name": "Aethylred/kerberos"}
+  ]
+}
