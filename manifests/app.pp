@@ -14,6 +14,7 @@ define idm::app (
   }
 
   vcsrepo { $repo:
+    ensure => present,
     provider => git
   }
 
