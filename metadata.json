@@ -1,6 +1,7 @@
 {
   "name": "alexsdutton-idm",
   "version": "0.1.0",
+  "license": "BSD-3-Clause",
   "author": "Alexander Dutton <idm@alexdutton.co.uk>",
   "source": "https://github.com/alexsdutton/idm-puppet",
   "project_page": "https://github.com/alexsdutton/idm",
