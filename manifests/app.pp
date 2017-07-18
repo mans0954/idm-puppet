@@ -41,7 +41,15 @@ define idm::app (
   }
 
   apache::vhost {
-    "${name}.${idm::base_domain}":
+    "idm-${name}-non-ssl":
+      servername => "${name}.${idm::base_domain}",
+      port => 80,
+      docroot => "$home/docroot",
+      redirect_status => 'permanent',
+      redirect_dest   => "https://${name}.${idm::base_domain}/";
+    "${name}.${idm::base_domain}-ssl":
+      servername => "${name}.${idm::base_domain}",
+      port => 443,
       docroot => "$home/docroot",
       ssl => true,
       wsgi_daemon_process         => "idm-${name}",
