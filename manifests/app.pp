@@ -53,8 +53,13 @@ define idm::app (
       docroot => "$home/docroot",
       ssl => true,
       wsgi_daemon_process         => "idm-${name}",
-      wsgi_daemon_process_options =>
-        { processes => '2', threads => '15', display-name => '%{GROUP}', python-home => $venv },
+      wsgi_daemon_process_options => {
+        processes => '2',
+        threads => '15',
+        display-name => '%{GROUP}',
+        python-home => $venv,
+        python-path => $repo,
+      },
       wsgi_process_group          => "idm-${name}",
       wsgi_script_aliases         => { '/' => $wsgi };
   }
