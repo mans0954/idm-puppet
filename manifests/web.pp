@@ -1,3 +1,5 @@
 class idm::web {
-  class { "apache": }
+  class { "apache":
+    default_vhost => false
+  }
 }

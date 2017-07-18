@@ -15,7 +15,8 @@ define idm::app (
 
   vcsrepo { $repo:
     ensure => present,
-    provider => git
+    provider => git,
+    source => $vcs_url,
   }
 
   apache::vhost {
