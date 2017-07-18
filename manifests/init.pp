@@ -7,11 +7,14 @@ class idm (
     "python3-dev",
     "libxslt1-dev",
     "libxml2-dev",
+    "libxmlsec1-dev",
+    "libkrb5-dev",
   ]
 
   package { $required_packages:
     ensure => installed
   }
+  include idm::broker
   include idm::web
 
   idm::app {
