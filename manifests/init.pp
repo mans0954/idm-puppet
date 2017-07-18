@@ -1,6 +1,9 @@
 class idm (
   $base_domain = 'example.org'
 ) {
+  package { ["python3-virtualenv"]:
+    ensure => installed
+  }
   include idm::web
 
   idm::app {

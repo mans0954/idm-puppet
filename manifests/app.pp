@@ -5,6 +5,7 @@ define idm::app (
   $home = "/srv/idm-${name}"
   $user = "idm_${name}"
   $repo = "${home}/repo"
+  $venv = "${home}/venv"
 
   user {
     $user:
@@ -20,9 +21,15 @@ define idm::app (
   }
 
   apache::vhost {
-    "idm-${name}":
+    "${name}.${idm::base_domain}":
       docroot => "$home/docroot",
-      vhost_name => "${name}.${idm::base_domain}";
+      ssl => true;
+  }
+
+  exec { "idm-${name}-create-virtualenv":
+    unless => "[ -d $venv ]",
+    command => "/usr/bin/virtualenv3 $venv",
+    require => Package["python3-virtualenv"];
   }
 
 }
