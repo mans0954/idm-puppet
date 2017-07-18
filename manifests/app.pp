@@ -29,7 +29,7 @@ define idm::app (
   exec { "idm-${name}-create-virtualenv":
     unless => "/usr/bin/test -d $venv",
     command => "/usr/bin/virtualenv $venv --python=/usr/bin/python3",
-    require => Package["python3-virtualenv"];
+    require => Package["python-virtualenv"];
   }
 
 }
