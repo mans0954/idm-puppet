@@ -46,6 +46,12 @@ define idm::app (
     ensure => present,
   }
 
+  rabbitmq_user_permissions { "${user}@/":
+    configure_permission => "idm\.${name}\..*",
+    read_permission      => '.*',
+    write_permission     => "idm\.${name}\..*",
+  }
+  
   rabbitmq_user_permissions { "${user}@${celery_vhost}":
     configure_permission => '.*',
     read_permission      => '.*',
