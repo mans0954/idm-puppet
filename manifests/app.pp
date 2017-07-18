@@ -13,7 +13,7 @@ define idm::app (
       managehome => true;
   }
 
-  vscrepo { $repo:
+  vcsrepo { $repo:
     provider => git
   }
 
