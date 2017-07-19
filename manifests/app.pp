@@ -37,6 +37,7 @@ define idm::app (
     "DJANGO_SETTINGS_MODULE=${app_package}.settings",
     "DJANGO_SECRET_KEY=$django_secret_key",
     "DJANGO_STATIC_ROOT=$static_root",
+    "DJANGO_EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend",
     "BROKER_SSL=no",
     "BROKER_USERNAME=$user",
     "BROKER_PASSWORD=$amqp_password",
