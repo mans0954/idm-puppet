@@ -8,6 +8,7 @@ define idm::app (
   $repo = "${home}/repo"
   $venv = "${home}/venv"
   $wsgi = "${home}/app.wsgi"
+  $static_root = "${home}/static"
   $manage_py = "${home}/manage.py"
   $python = "${venv}/bin/python"
   $celery_vhost = "idm-${name}-celery"
@@ -28,6 +29,7 @@ define idm::app (
     "DJANGO_ALLOWED_HOSTS=$_server_name",
     "DJANGO_SETTINGS_MODULE=${app_package}.settings",
     "DJANGO_SECRET_KEY=$django_secret_key",
+    "DJANGO_STATIC_ROOT=$static_root",
     "BROKER_SSL=no",
     "BROKER_USERNAME=$user",
     "BROKER_PASSWORD=$amqp_password",
@@ -114,6 +116,8 @@ define idm::app (
     $manage_py:
       content => template('idm/venv-python-hashbang.erb', 'idm/env.py.erb', 'idm/manage.py.erb'),
       mode => '755';
+    $static_root:
+      ensure => directory;
   }
 
   postgresql::server::database { $user:
