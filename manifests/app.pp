@@ -13,6 +13,8 @@ define idm::app (
   $manage_py = "${home}/manage.py"
   $python = "${venv}/bin/python"
   $celery_vhost = "idm-${name}-celery"
+  $env_file = "$home/env.sh"
+  $systemd_celery_service = "/etc/systemd/system/idm-$name-celery.service"
 
   # Secrets
   $django_secret_key = hiera("idm::${name}::secret_key")
@@ -38,6 +40,10 @@ define idm::app (
     "BROKER_SSL=no",
     "BROKER_USERNAME=$user",
     "BROKER_PASSWORD=$amqp_password",
+    "CELERYD_NODES=4",
+    "CELERYD_PID_FILE=/var/run/idm-%{name}-celery.pid",
+    "CELERYD_LOG_FILE=/var/log/idm-%{name}-celery.log",
+    "CELERYD_LOG_LEVEL=info",
   ] + $additional_environment + hiera_array("idm::${name}::additional_environment", [])
 
   user {
@@ -131,6 +137,16 @@ define idm::app (
       mode => '755';
     $static_root:
       ensure => directory;
+    $systemd_celery_service:
+      content => template("idm/celery.service.erb");
+    $env_file:
+      content => template("idm/env.sh.erb");
+  }
+
+  service {
+    "idm-$name-celery":
+      ensure => running,
+      require => [File[$systemd_celery_service], Exec["idm-${name}-initial-fixtures"]];
   }
 
   postgresql::server::database { $user:
