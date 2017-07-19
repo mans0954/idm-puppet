@@ -142,6 +142,9 @@ define idm::app (
     $env_file:
       content => template("idm/env.sh.erb");
     "/var/log/idm-${name}-celery.log":
+      ensure => present,
+      content => '',
+      replace => 'no',
       owner => $user,
       group => $user,
       mode => "600";
