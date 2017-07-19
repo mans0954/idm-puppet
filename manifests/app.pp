@@ -143,7 +143,7 @@ define idm::app (
       content => template("idm/env.sh.erb");
     "/var/log/idm-${name}-celery.log":
       owner => $user,
-      group => $group,
+      group => $user,
       mode => "600";
 
   }
