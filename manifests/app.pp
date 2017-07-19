@@ -28,7 +28,7 @@ define idm::app (
 
 
   $application_environment = [
-    "CELERY_BROKER_URL=amqp://localhost/$celery_vhost",
+    "CELERY_BROKER_URL=amqp://${user}:${amqp_password}@localhost/$celery_vhost",
     "DJANGO_ALLOWED_HOSTS=$_server_name",
     "DJANGO_DEBUG=$django_debug",
     "DJANGO_SETTINGS_MODULE=${app_package}.settings",
