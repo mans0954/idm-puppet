@@ -17,6 +17,9 @@ define idm::app (
   $django_secret_key = hiera("idm::${name}::secret_key")
   $amqp_password = hiera("idm::${name}::amqp_password")
 
+  # Other hiera values
+  $django_debug = hiera("idm::${name}::debug", false) ? { true => "on", default => "off" }
+
   if $server_name == undef {
     $_server_name = "${name}.${idm::base_domain}"
   } else {
@@ -27,6 +30,7 @@ define idm::app (
   $application_environment = [
     "CELERY_BROKER_URL=amqp://localhost/$celery_vhost",
     "DJANGO_ALLOWED_HOSTS=$_server_name",
+    "DJANGO_DEBUG=$django_debug",
     "DJANGO_SETTINGS_MODULE=${app_package}.settings",
     "DJANGO_SECRET_KEY=$django_secret_key",
     "DJANGO_STATIC_ROOT=$static_root",
