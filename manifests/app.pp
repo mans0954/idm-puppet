@@ -90,7 +90,11 @@ define idm::app (
         group => $user,
       },
       wsgi_process_group          => "idm-${name}",
-      wsgi_script_aliases         => { '/' => $wsgi };
+      wsgi_script_aliases         => { '/' => $wsgi },
+      aliases => [ { alias => '/static', path => $static_root } ],
+      directories => [
+        { path => $static_root, allow => "from all" },
+      ];
   }
 
   exec {
