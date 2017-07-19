@@ -14,7 +14,7 @@ define idm::app (
   $django_secret_key = hiera("idm::${name}::secret_key")
   $amqp_password = hiera("idm::${name}::amqp_password")
 
-  if $server_name != undef {
+  if $server_name == undef {
     $_server_name = "${name}.${idm::base_domain}"
   } else {
     $_server_name = $server_name
@@ -47,11 +47,11 @@ define idm::app (
   }
 
   rabbitmq_user_permissions { "${user}@/":
-    configure_permission => "idm\.${name}\..*",
+    configure_permission => "idm\\.${name}\\..*",
     read_permission      => '.*',
-    write_permission     => "idm\.${name}\..*",
+    write_permission     => "idm\\.${name}\\..*",
   }
-  
+
   rabbitmq_user_permissions { "${user}@${celery_vhost}":
     configure_permission => '.*',
     read_permission      => '.*',
