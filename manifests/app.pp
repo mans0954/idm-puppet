@@ -2,6 +2,7 @@ define idm::app (
   $vcs_url,
   $app_package,
   $server_name = undef,
+  $additional_environment = []
 ) {
   $home = "/srv/idm-${name}"
   $user = "idm_${name}"
@@ -37,7 +38,7 @@ define idm::app (
     "BROKER_SSL=no",
     "BROKER_USERNAME=$user",
     "BROKER_PASSWORD=$amqp_password",
-  ] + hiera_array("idm::${name}::additional_environment", [])
+  ] + $additional_environment + hiera_array("idm::${name}::additional_environment", [])
 
   user {
     $user:
