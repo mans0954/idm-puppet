@@ -84,7 +84,6 @@ define idm::app (
         threads => '15',
         display-name => '%{GROUP}',
         python-home => $venv,
-        python-path => $repo,
         user => $user,
         group => $user,
       },
@@ -105,6 +104,7 @@ define idm::app (
       require => [Exec["idm-${name}-install-requirements"], File[$manage_py]];
     "idm-${name}-migrate":
       command => "$manage_py migrate",
+      user => $user,
       require => [Exec["idm-${name}-install-requirements"], Postgresql::Server::Database[$user], File[$manage_py]];
   }
 
