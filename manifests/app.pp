@@ -103,4 +103,11 @@ define idm::app (
       content => template('idm/app.wsgi.erb');
   }
 
+  postgresql::database { $user:
+    owner => $user,
+  }
+
+  postgresql::role { $user:
+  }
+
 }

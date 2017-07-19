@@ -12,6 +12,8 @@ class idm (
     "bison",
   ]
 
+  include postgresql::server
+
   package { $required_packages:
     ensure => installed
   }
