@@ -1,8 +1,2 @@
-import os
-
-<% @application_environment.each do |env| env = env.partition('=') -%>
-os.environ['<%= env[0] %>'] = "<%= env[2] %>"
-<% end -%>
-
 from django.core.wsgi import get_wsgi_application
 application = get_wsgi_application()

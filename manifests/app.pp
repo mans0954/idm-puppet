@@ -8,6 +8,8 @@ define idm::app (
   $repo = "${home}/repo"
   $venv = "${home}/venv"
   $wsgi = "${home}/app.wsgi"
+  $manage_py = "${home}/manage.py"
+  $python = "${venv}/bin/python"
   $celery_vhost = "idm-${name}-celery"
 
   # Secrets
@@ -97,12 +99,21 @@ define idm::app (
       require => Package["python-virtualenv"];
     "idm-${name}-install-requirements":
       command => "$venv/bin/pip install -r $repo/requirements.txt",
-      require => Exec["idm-${name}-create-virtualenv"];
+      require => [Exec["idm-${name}-create-virtualenv"], Vcsrepo[$repo]];
+    "idm-${name}-collectstatic":
+      command => "$manage_py collectstatic --no-input",
+      require => [Exec["idm-${name}-install-requirements"], File[$manage_py]];
+    "idm-${name}-migrate":
+      command => "$manage_py migrate",
+      require => [Exec["idm-${name}-install-requirements"], Postgresql::Server::Database[$user], File[$manage_py]];
   }
 
   file {
     $wsgi:
-      content => template('idm/app.wsgi.erb');
+      content => template('idm/env.py.erb', 'idm/app.wsgi.erb');
+    $manage_py:
+      content => template('idm/venv-python-hashbang.erb', 'idm/env.py.erb', 'idm/manage.py.erb'),
+      mode => '755';
   }
 
   postgresql::server::database { $user:
