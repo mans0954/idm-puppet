@@ -116,6 +116,10 @@ define idm::app (
       command => "$manage_py migrate",
       user => $user,
       require => [Exec["idm-${name}-install-requirements"], Postgresql::Server::Database[$user], File[$manage_py]];
+    "idm-${name}-initial-fixtures":
+      command => "$manage_py loaddata initial",
+      user => $user,
+      require => Exec["idm-${name}-migrate"];
   }
 
   file {
