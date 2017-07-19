@@ -37,7 +37,7 @@ define idm::app (
     "BROKER_SSL=no",
     "BROKER_USERNAME=$user",
     "BROKER_PASSWORD=$amqp_password",
-  ]
+  ] + hiera_array("idm::${name}::additional_environment", [])
 
   user {
     $user:
