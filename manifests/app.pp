@@ -83,6 +83,8 @@ define idm::app (
         display-name => '%{GROUP}',
         python-home => $venv,
         python-path => $repo,
+        user => $user,
+        group => $user,
       },
       wsgi_process_group          => "idm-${name}",
       wsgi_script_aliases         => { '/' => $wsgi };
