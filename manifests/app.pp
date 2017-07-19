@@ -41,8 +41,8 @@ define idm::app (
     "BROKER_USERNAME=$user",
     "BROKER_PASSWORD=$amqp_password",
     "CELERYD_NODES=4",
-    "CELERYD_PID_FILE=/var/run/idm-%{name}-celery.pid",
-    "CELERYD_LOG_FILE=/var/log/idm-%{name}-celery.log",
+    "CELERYD_PID_FILE=/var/run/idm-${name}-celery.pid",
+    "CELERYD_LOG_FILE=/var/log/idm-${name}-celery.log",
     "CELERYD_LOG_LEVEL=info",
   ] + $additional_environment + hiera_array("idm::${name}::additional_environment", [])
 
@@ -141,6 +141,11 @@ define idm::app (
       content => template("idm/celery.service.erb");
     $env_file:
       content => template("idm/env.sh.erb");
+    "/var/log/idm-${name}-celery.log":
+      owner => $user,
+      group => $group,
+      mode => "600";
+
   }
 
   service {
