@@ -18,6 +18,9 @@ class idm (
     ensure => installed
   }
   include idm::broker
+  class { idm::kerberos:
+    realm => hiera('idm::kerberos::realm', 'EXAMPLE.ORG')
+  }
   include idm::web
 
   $core_server_name = hiera('idm::core::server_name', "core.${base_domain}")
