@@ -23,7 +23,7 @@ class idm::kerberos (
   }
 
   exec { "create-kerberos-realm":
-    command => "kdb5_util create -r $realm -s",
+    command => "/usr/sbin/kdb5_util create -r $realm -s",
     unless => "/usr/bin/test -e /etc/krb5kdc/principal",
   }
 
