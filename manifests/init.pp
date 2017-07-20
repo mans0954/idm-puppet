@@ -19,7 +19,8 @@ class idm (
   }
   include idm::broker
   class { idm::kerberos:
-    realm => hiera('idm::kerberos::realm', 'EXAMPLE.ORG')
+    realm => hiera('idm::kerberos::realm', 'EXAMPLE.ORG'),
+    domain_realms => hiera('idm::kerberos::domain_realms', ['example.org'])
   }
   include idm::web
 

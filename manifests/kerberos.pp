@@ -1,5 +1,6 @@
 class idm::kerberos (
   $realm,
+  $domain_realms,
 ) {
   $krb5_conf = "/etc/krb5.conf"
   $kdc_conf = "/etc/krb5kdc/kdc.conf"
