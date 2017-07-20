@@ -4,6 +4,7 @@ class idm::kerberos (
 ) {
   $krb5_conf = "/etc/krb5.conf"
   $kdc_conf = "/etc/krb5kdc/kdc.conf"
+  $master_password = hiera('idm::kerberos::master_password')
 
   $required_packages = [
     "krb5-admin-server",
@@ -23,7 +24,7 @@ class idm::kerberos (
   }
 
   exec { "create-kerberos-realm":
-    command => "/usr/sbin/kdb5_util create -r $realm -s",
+    command => "/usr/sbin/kdb5_util create -r $realm -s <<< '$master_password\n$master_password'",
     unless => "/usr/bin/test -e /etc/krb5kdc/principal",
   }
 
