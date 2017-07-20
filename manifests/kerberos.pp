@@ -22,6 +22,11 @@ class idm::kerberos (
       content => template('idm/kdc.conf.erb');
   }
 
+  exec { "create-kerberos-realm":
+    command => "kdb5_util create -r $realm -s",
+    unless => "/usr/bin/test -e /etc/krb5kdc/principal",
+  }
+
   service {
     "krb5-kdc":
       ensure => running;
@@ -30,5 +35,5 @@ class idm::kerberos (
   }
 
   Package["krb5-kdc"] -> File[$krb5_conf] -> Service["krb5-kdc"]
-  Package["krb5-admin-server"] -> File[$kdc_conf] -> Service["krb5-admin-server"]
+  Package["krb5-admin-server"] -> File[$kdc_conf] -> Exec["create-kerberos-realm"] -> Service["krb5-admin-server"]
 }
