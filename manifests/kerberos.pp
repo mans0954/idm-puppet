@@ -4,6 +4,7 @@ class idm::kerberos (
 ) {
   $krb5_conf = "/etc/krb5.conf"
   $kdc_conf = "/etc/krb5kdc/kdc.conf"
+  $kadm5_acl = "/etc/krb5kdc/kadm5.acl"
   $master_password = hiera('idm::kerberos::master_password')
 
   $required_packages = [
@@ -23,6 +24,8 @@ class idm::kerberos (
       ensure => directory;
     $kdc_conf:
       content => template('idm/kdc.conf.erb');
+    $kadm5_acl:
+      content => template('idm/kadm5.acl.erb');
   }
 
   exec { "create-kerberos-realm":
@@ -37,6 +40,6 @@ class idm::kerberos (
       ensure => running;
   }
 
-  Package["krb5-kdc"] -> File[$krb5_conf] -> Service["krb5-kdc"]
-  Package["krb5-admin-server"] -> File[$kdc_conf] -> Exec["create-kerberos-realm"] -> Service["krb5-admin-server"]
+  Package["krb5-kdc"] -> File[$krb5_conf] -> Exec["create-kerberos-realm"] -> Service["krb5-kdc"]
+  Package["krb5-admin-server"] -> File[$kdc_conf] -> File[$kadm5_acl] -> Service["krb5-admin-server"]
 }
