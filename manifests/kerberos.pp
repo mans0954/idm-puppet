@@ -68,7 +68,7 @@ class idm::kerberos (
         ensure => present,
         owner => $owner,
         group => $group,
-        mode => 600;
+        mode => "600";
     }
   }
 
