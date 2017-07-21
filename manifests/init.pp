@@ -30,11 +30,16 @@ class idm (
   idm::app {
     core:
       app_package => "idm_core",
-      vcs_url => "https://github.com/alexsdutton/idm-core";
+      vcs_url => "https://github.com/alexsdutton/idm-core",
+      additional_environment => [
+        "IDM_AUTH_URL=https://$auth_server_name/",
+        "IDM_AUTH_API_URL=https://$auth_server_name/api/",
+      ];
     auth:
       app_package => "idm_auth",
       vcs_url => "https://github.com/alexsdutton/idm-auth",
       additional_environment => [
+        "IDM_CORE_URL=https://$core_server_name/",
         "IDM_CORE_API_URL=https://$core_server_name/api/",
       ];
   }
