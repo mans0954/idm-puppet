@@ -58,9 +58,9 @@ class idm::kerberos (
   }
 
   define keytab ($owner, $group, $principals) {
-    keytab_entry { $principals:
+    idm::kerberos::keytab_entry { $principals:
       filename => $name,
-      before => File[$filename]
+      before => File[$name]
     }
 
     file {
