@@ -14,6 +14,7 @@ define idm::app (
   $python = "${venv}/bin/python"
   $celery_vhost = "idm-${name}-celery"
   $env_file = "$home/env.sh"
+  $keytab = "$home/krb5.keytab"
   $systemd_celery_service = "/etc/systemd/system/idm-$name-celery.service"
 
   # Secrets
@@ -167,6 +168,24 @@ define idm::app (
   }
 
   postgresql::server::role { $user:
+  }
+
+  $principals = [
+    "HTTP/$server_name",
+    "api/$server_name",
+    "$server_name/admin",
+  ] + ($name ? {
+    auth => [
+      "$fqdn/admin",
+    ],
+    default => [],
+  })
+
+  idm::kerberos::keytab {
+    $keytab:
+      owner => $user,
+      group => $user,
+      principals => $principals
   }
 
 }

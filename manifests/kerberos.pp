@@ -42,4 +42,34 @@ class idm::kerberos (
 
   Package["krb5-kdc"] -> File[$krb5_conf] -> Exec["create-kerberos-realm"] -> Service["krb5-kdc"]
   Package["krb5-admin-server"] -> File[$kdc_conf] -> File[$kadm5_acl] -> Service["krb5-admin-server"]
+
+  define keytab_entry($filename) {
+    exec {
+      "create-principal-$name":
+        command => "/usr/sbin/kadmin.local ank -randkey $name",
+        unless => "/bin/test \"$(/usr/sbin/kadmin.local listprincs $name)\"",
+        provider => shell;
+      "extract-keytab-$name":
+        command => "/usr/sbin/kadmin.local ktadd -k $filename $name",
+        unless => "/usr/bin/klist -k $filename | grep $name",
+        provider => shell;
+    }
+
+  }
+
+  define keytab ($owner, $group, $principals) {
+    keytab_entry { $principals:
+      filename => $name,
+      before => File[$filename]
+    }
+
+    file {
+      $filename:
+        ensure => present,
+        owner => $owner,
+        group => $group,
+        mode => 600;
+    }
+  }
+
 }
