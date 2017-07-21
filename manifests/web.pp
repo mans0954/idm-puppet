@@ -3,7 +3,7 @@ class idm::web (
 ){
   $ssl_conf = "/root/cert.conf"
   $ssl_cert = "/etc/ssl/certs/$fqdn.crt"
-  $ssl_key = "/etc/ssl/certs/$fqdn.pem"
+  $ssl_key = "/etc/ssl/private/$fqdn.pem"
 
   file { $ssl_conf:
     content => template('idm/cert.conf.erb');
@@ -16,7 +16,7 @@ class idm::web (
     "copy-ssl-cert":
       command => "/bin/cp $ssl_cert /usr/share/ca-certificates/";
     "add-cert-to-ca-certificates":
-      command => "/bin/echo '/usr/share/ca-certificates/$fqdn.crt' >> /etc/ca-certificates.conf",
+      command => "/bin/echo '$fqdn.crt' >> /etc/ca-certificates.conf",
       unless => "/bin/grep $fqdn.crt /etc/ca-certificates.conf",
       provider => "shell";
     "update-ca-certificates":
