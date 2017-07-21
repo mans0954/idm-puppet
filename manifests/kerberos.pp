@@ -43,7 +43,7 @@ class idm::kerberos (
   Package["krb5-kdc"] -> File[$krb5_conf] -> Exec["create-kerberos-realm"] -> Service["krb5-kdc"]
   Package["krb5-admin-server"] -> File[$kdc_conf] -> File[$kadm5_acl] -> Service["krb5-admin-server"]
 
-  define keytab_entry($filename) {
+  define keytab_entry($filename, $owner, $group) {
     exec {
       "create-principal-$name":
         command => "/usr/sbin/kadmin.local ank -randkey $name",
@@ -53,14 +53,28 @@ class idm::kerberos (
         command => "/usr/sbin/kadmin.local ktadd -k $filename $name",
         unless => "/usr/bin/klist -k $filename | grep $name",
         provider => shell;
+      "kinit-$name":
+        command => "/usr/bin/kinit -kt $filename $name",
+        user => $owner,
+        group => $group;
     }
-    Exec["create-principal-$name"] -> Exec["extract-keytab-$name"]
+    Exec["create-principal-$name"] -> Exec["extract-keytab-$name"] -> File[$filename] ~> Exec["kinit-$name"]
+
+    cron {
+      "cron-kinit-$name":
+        command => "/usr/bin/kinit -kt $filename $name",
+        user => $owner,
+        minute => 1,
+        hour => "*/4",
+        require => File[$filename];
+    }
   }
 
   define keytab ($owner, $group, $principals) {
     idm::kerberos::keytab_entry { $principals:
       filename => $name,
-      before => File[$name]
+      owner => $owner,
+      group => $group;
     }
 
     file {
