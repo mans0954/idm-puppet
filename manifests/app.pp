@@ -1,7 +1,7 @@
 define idm::app (
   $vcs_url,
   $app_package,
-  $server_name = undef,
+  $server_name,
   $additional_environment = []
 ) {
   $home = "/srv/idm-${name}"
@@ -24,16 +24,9 @@ define idm::app (
   # Other hiera values
   $django_debug = hiera("idm::${name}::debug", false) ? { true => "on", default => "off" }
 
-  if $server_name == undef {
-    $_server_name = "${name}.${idm::base_domain}"
-  } else {
-    $_server_name = $server_name
-  }
-
-
   $application_environment = [
     "CELERY_BROKER_URL=amqp://${user}:${amqp_password}@localhost/$celery_vhost",
-    "DJANGO_ALLOWED_HOSTS=$_server_name",
+    "DJANGO_ALLOWED_HOSTS=$server_name",
     "DJANGO_DEBUG=$django_debug",
     "DJANGO_SETTINGS_MODULE=${app_package}.settings",
     "DJANGO_SECRET_KEY=$django_secret_key",
@@ -84,13 +77,13 @@ define idm::app (
 
   apache::vhost {
     "idm-${name}-non-ssl":
-      servername => $_server_name,
+      servername => $server_name,
       port => 80,
       docroot => "$home/docroot",
       redirect_status => 'permanent',
       redirect_dest   => "https://${name}.${idm::base_domain}/";
     "idm-${name}-ssl":
-      servername => $_server_name,
+      servername => $server_name,
       port => 443,
       docroot => "$home/docroot",
       ssl => true,
