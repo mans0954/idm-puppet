@@ -23,8 +23,7 @@ class idm::web (
       command => "/usr/sbin/update-ca-certificates";
   }
 
-  Exec["add-cert-to-ca-certificates"] -> Exec["create-ssl-cert"]
-  File[$ssl_conf] ~> Exec["create-ssl-cert"] ~> Exec["copy-ssl-cert"] ~> Exec["update-ca-certificates"]
+  File[$ssl_conf] ~> Exec["create-ssl-cert", "add-cert-to-ca-certificates"] ~> Exec["copy-ssl-cert"] ~> Exec["update-ca-certificates"]
 
   class { "apache":
     #default_vhost => false
