@@ -47,14 +47,14 @@ class idm::kerberos (
     exec {
       "create-principal-$name":
         command => "/usr/sbin/kadmin.local ank -randkey $name",
-        unless => "/bin/test \"$(/usr/sbin/kadmin.local listprincs $name)\"",
+        unless => "/usr/bin/test \"$(/usr/sbin/kadmin.local listprincs $name)\"",
         provider => shell;
       "extract-keytab-$name":
         command => "/usr/sbin/kadmin.local ktadd -k $filename $name",
         unless => "/usr/bin/klist -k $filename | grep $name",
         provider => shell;
     }
-
+    Exec["create-principal-$name"] -> Exec["extract-keytab-$name"]
   }
 
   define keytab ($owner, $group, $principals) {
