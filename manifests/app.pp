@@ -140,7 +140,7 @@ define idm::app (
       command => "$manage_py loaddata initial",
       user => $user,
       require => Exec["idm-${name}-migrate"];
-    "load-fixture":
+    "idm-${name}-load-fixture":
       command => "$manage_py loaddata $fixture",
       user => $user,
       require => [Exec["idm-${name}-migrate"], File[$fixture]];
