@@ -11,7 +11,7 @@
         O                      = University of Oxford
         OU                     = Department of Indefinite Studies
         CN                     = <%= @fqdn %>
-<% if @alt_names -%>
+<% if not @alt_names.empty? -%>
 [ v3_req ]
         subjectAltName         = @alt_names
         basicConstraints       = CA:FALSE
