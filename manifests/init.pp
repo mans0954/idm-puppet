@@ -12,6 +12,7 @@ class idm (
     "bison",
   ]
 
+  $realm = hiera('idm::kerberos::realm', 'EXAMPLE.ORG')
   $core_server_name = hiera('idm::core::server_name', "core.${base_domain}")
   $auth_server_name = hiera('idm::auth::server_name', "auth.${base_domain}")
 
@@ -22,7 +23,7 @@ class idm (
   }
   include idm::broker
   class { idm::kerberos:
-    realm => hiera('idm::kerberos::realm', 'EXAMPLE.ORG'),
+    realm => $realm,
     domain_realms => hiera('idm::kerberos::domain_realms', [$base_domain])
   }
   class { idm::web:

@@ -17,6 +17,8 @@ define idm::app (
   $keytab = "$home/krb5.keytab"
   $systemd_celery_service = "/etc/systemd/system/idm-$name-celery.service"
 
+  $fixture = "$home/fixture.yaml"
+
   # Principal names
   $client_principal_name = "api/$server_name"
   $http_principal_name = "HTTP/$server_name"
@@ -138,6 +140,10 @@ define idm::app (
       command => "$manage_py loaddata initial",
       user => $user,
       require => Exec["idm-${name}-migrate"];
+    "load-fixture":
+      command => "$manage_py loaddata $fixture",
+      user => $user,
+      require => [Exec["idm-${name}-migrate"], File[$fixture]];
   }
 
   file {
@@ -160,7 +166,8 @@ define idm::app (
       owner => $user,
       group => $user,
       mode => "600";
-
+    $fixture:
+      content => template("idm/fixture-$name.yaml.erb");
   }
 
   service {
