@@ -49,7 +49,8 @@ define idm::app (
   ] + ($name ? {
     auth => [
       "KADMIN_PRINCIPAL_NAME=$kadmin_principal_name",
-    ]
+    ],
+    default => [],
   })+ $additional_environment + hiera_array("idm::${name}::additional_environment", [])
 
   user {
