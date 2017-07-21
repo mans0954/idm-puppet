@@ -181,6 +181,9 @@ define idm::app (
     auth => [
       $kadmin_principal_name,
     ],
+    core => [
+      "HTTP/$fqdn",
+    ],
     default => [],
   })
 
