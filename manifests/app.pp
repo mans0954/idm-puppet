@@ -114,7 +114,7 @@ define idm::app (
       wsgi_pass_authorization => 'On',
       aliases => [ { alias => '/static', path => $static_root } ],
       directories => [
-        { path => $static_root, allow => "from all" },
+        { path => $static_root, require => "all granted" },
       ],
       require => Exec["create-ssl-cert"];
   }
