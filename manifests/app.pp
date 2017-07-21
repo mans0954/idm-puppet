@@ -17,6 +17,11 @@ define idm::app (
   $keytab = "$home/krb5.keytab"
   $systemd_celery_service = "/etc/systemd/system/idm-$name-celery.service"
 
+  # Principal names
+  $client_principal_name = "api/$server_name"
+  $http_principal_name = "HTTP/$server_name"
+  $kadmin_principal_name = "$server_name/admin"
+
   # Secrets
   $django_secret_key = hiera("idm::${name}::secret_key")
   $amqp_password = hiera("idm::${name}::amqp_password")
@@ -40,7 +45,12 @@ define idm::app (
     "CELERYD_LOG_FILE=/var/log/idm-${name}-celery.log",
     "CELERYD_LOG_LEVEL=info",
     "REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt",
-  ] + $additional_environment + hiera_array("idm::${name}::additional_environment", [])
+    "CLIENT_PRINCIPAL_NAME=$client_principal_name",
+  ] + ($name ? {
+    auth => [
+      "KADMIN_PRINCIPAL_NAME=$kadmin_principal_name",
+    ]
+  })+ $additional_environment + hiera_array("idm::${name}::additional_environment", [])
 
   user {
     $user:
@@ -164,12 +174,11 @@ define idm::app (
   }
 
   $principals = [
-    "HTTP/$server_name",
-    "api/$server_name",
-    "$server_name/admin",
+    $client_principal_name,
+    $http_principal_name,
   ] + ($name ? {
     auth => [
-      "$fqdn/admin",
+      $kadmin_principal_name,
     ],
     default => [],
   })
