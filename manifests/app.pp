@@ -111,6 +111,7 @@ define idm::app (
       },
       wsgi_process_group          => "idm-${name}",
       wsgi_script_aliases         => { '/' => $wsgi },
+      wsgi_pass_authorization => 'On',
       aliases => [ { alias => '/static', path => $static_root } ],
       directories => [
         { path => $static_root, allow => "from all" },
@@ -141,7 +142,8 @@ define idm::app (
 
   file {
     $wsgi:
-      content => template('idm/env.py.erb', 'idm/app.wsgi.erb');
+      content => template('idm/env.py.erb', 'idm/app.wsgi.erb'),
+      notify => Apache::Vhost["idm-${name}-ssl"];
     $manage_py:
       content => template('idm/venv-python-hashbang.erb', 'idm/env.py.erb', 'idm/manage.py.erb'),
       mode => '755';
