@@ -1,10 +1,12 @@
-class idm::web {
+class idm::web (
+  $alt_names = [],
+){
   $ssl_conf = "/root/cert.conf"
   $ssl_cert = "/etc/ssl/certs/$fqdn.crt"
   $ssl_key = "/etc/ssl/certs/$fqdn.pem"
 
   file { $ssl_conf:
-    content => template('idm/cert.conf');
+    content => template('idm/cert.conf.erb');
   }
 
   exec {

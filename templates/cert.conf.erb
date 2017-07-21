@@ -1,0 +1,22 @@
+[ req ]
+        prompt                 = no
+        default_bits           = 2048
+        default_md             = sha256
+        distinguished_name     = dn
+        req_extensions         = v3_req
+[ dn ]
+        C                      = GB
+        ST                     = Oxfordshire
+        L                      = Oxford
+        O                      = University of Oxford
+        OU                     = Department of Indefinite Studies
+        CN                     = <%= @fqdn %>
+<% if @alt_names -%>
+[ v3_req ]
+        subjectAltName         = @alt_names
+        basicConstraints       = CA:FALSE
+[alt_names]
+<% @alt_names.each_with_index do |i, alt_name| -%>
+        DNS.<%= i + 1 %>                  = <%= alt_name %>
+<% end -%>
+<% end -%>
