@@ -64,7 +64,7 @@ class idm::kerberos (
     }
 
     file {
-      $filename:
+      $name:
         ensure => present,
         owner => $owner,
         group => $group,
