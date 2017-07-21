@@ -11,7 +11,7 @@ class idm::web (
 
   exec {
     "create-ssl-cert":
-      command => "/usr/bin/openssl req -x509 -config $ssl_conf -newkey rsa:4096 -keyout $ssl_key -out $ssl_cert -days 3650 -nodes extensions v3_req",
+      command => "/usr/bin/openssl req -x509 -config $ssl_conf -newkey rsa:4096 -keyout $ssl_key -out $ssl_cert -days 3650 -nodes -extensions v3_req",
       creates => $ssl_cert;
     "copy-ssl-cert":
       command => "/bin/cp $ssl_cert /usr/share/ca-certificates/";
