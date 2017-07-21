@@ -92,6 +92,8 @@ define idm::app (
       port => 443,
       docroot => "$home/docroot",
       ssl => true,
+      ssl_cert => $idm::web::ssl_cert,
+      ssl_key => $idm::web::ssl_key,
       wsgi_daemon_process         => "idm-${name}",
       wsgi_daemon_process_options => {
         processes => '2',
@@ -106,7 +108,8 @@ define idm::app (
       aliases => [ { alias => '/static', path => $static_root } ],
       directories => [
         { path => $static_root, allow => "from all" },
-      ];
+      ],
+      require => File[$idm::web::ssl_cert, $idm::web::ssl_key];
   }
 
   exec {
