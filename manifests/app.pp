@@ -45,6 +45,7 @@ define idm::app (
     "CELERYD_PID_FILE=$home/celery.pid",
     "CELERYD_LOG_FILE=/var/log/idm-${name}-celery.log",
     "CELERYD_LOG_LEVEL=info",
+    "REQUESTS_CA_BUNDLE=/etc/ssl/certs/ca-certificates.crt",
   ] + $additional_environment + hiera_array("idm::${name}::additional_environment", [])
 
   user {
