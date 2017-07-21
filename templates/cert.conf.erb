@@ -3,7 +3,9 @@
         default_bits           = 2048
         default_md             = sha256
         distinguished_name     = dn
+<% if not @alt_names.empty? -%>
         req_extensions         = v3_req
+<% end -%>
 [ dn ]
         C                      = GB
         ST                     = Oxfordshire
