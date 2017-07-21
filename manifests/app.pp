@@ -109,7 +109,7 @@ define idm::app (
       directories => [
         { path => $static_root, allow => "from all" },
       ],
-      require => File[$idm::web::ssl_cert, $idm::web::ssl_key];
+      require => Exec["create-ssl-cert"];
   }
 
   exec {
