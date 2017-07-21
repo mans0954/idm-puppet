@@ -12,6 +12,9 @@ class idm (
     "bison",
   ]
 
+  $core_server_name = hiera('idm::core::server_name', "core.${base_domain}")
+  $auth_server_name = hiera('idm::auth::server_name', "auth.${base_domain}")
+
   include postgresql::server
 
   package { $required_packages:
@@ -22,10 +25,12 @@ class idm (
     realm => hiera('idm::kerberos::realm', 'EXAMPLE.ORG'),
     domain_realms => hiera('idm::kerberos::domain_realms', ['example.org'])
   }
-  include idm::web
-
-  $core_server_name = hiera('idm::core::server_name', "core.${base_domain}")
-  $auth_server_name = hiera('idm::auth::server_name', "auth.${base_domain}")
+  class { idm::web:
+    alt_names => [
+      $core_server_name,
+      $auth_server_name,
+    ]
+  }
 
   idm::app {
     core:
