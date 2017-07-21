@@ -23,7 +23,7 @@ class idm (
   include idm::broker
   class { idm::kerberos:
     realm => hiera('idm::kerberos::realm', 'EXAMPLE.ORG'),
-    domain_realms => hiera('idm::kerberos::domain_realms', ['example.org'])
+    domain_realms => hiera('idm::kerberos::domain_realms', [$base_domain])
   }
   class { idm::web:
     alt_names => [
