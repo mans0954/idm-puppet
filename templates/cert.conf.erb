@@ -18,7 +18,7 @@
         subjectAltName         = @alt_names
         basicConstraints       = CA:FALSE
 [alt_names]
-<% @alt_names.each_with_index do |i, alt_name| -%>
-        DNS.<%= i + 1 %>                  = <%= alt_name %>
+<% @alt_names.each_with_index do |alt_name, i| -%>
+        DNS.<%= (i + 1) %>                  = <%= alt_name %>
 <% end -%>
 <% end -%>
