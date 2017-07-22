@@ -16,7 +16,7 @@
   fields:
     name: 'University of Oxford Identity Self-Service'
     client_id: <%= scope.lookupvar('idm::core_oidc_client_id') %>
-    client_secret: <%= scope.lookupvar('idm::core_oicd_client_secret') %>
+    client_secret: <%= scope.lookupvar('idm::core_oidc_client_secret') %>
     response_type: code
     _redirect_uris: https://<%= scope.lookupvar('idm::core_server_name') %>/oidc/complete/
     client_type: confidential
