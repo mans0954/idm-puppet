@@ -140,6 +140,7 @@ define idm::app (
       require => [Exec["idm-${name}-install-requirements"], Postgresql::Server::Database[$user], File[$manage_py]];
     "idm-${name}-initial-fixtures":
       command => "$manage_py loaddata initial",
+      returns => [0, 1], # Don't worry if there are actually no such fixtures
       user => $user,
       require => Exec["idm-${name}-migrate"];
     "idm-${name}-load-fixture":
