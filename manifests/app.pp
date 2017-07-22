@@ -42,6 +42,8 @@ define idm::app (
     "BROKER_SSL=no",
     "BROKER_USERNAME=$user",
     "BROKER_PASSWORD=$amqp_password",
+    "KRB5_KTNAME=$keytab",
+    "KRB5_CLIENT_KTNAME=$keytab",
     "CELERYD_NODES=4",
     "CELERYD_PID_FILE=$home/celery.pid",
     "CELERYD_LOG_FILE=/var/log/idm-${name}-celery.log",
