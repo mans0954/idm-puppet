@@ -8,7 +8,7 @@ User=<%= @user %>
 Group=<%= @user %>
 EnvironmentFile=<%= @env_file %>
 WorkingDirectory=<%= @home %>
-ExecStart=/bin/sh -c '<%= @venv %>/bin/flower -A <%= @app_package %> --port=<%= @flower_port %> --url-prefix=flower
+ExecStart=<%= @venv %>/bin/flower -A <%= @app_package %> --port=<%= @flower_port %> --url-prefix=flower
 
 [Install]
 WantedBy=multi-user.target
