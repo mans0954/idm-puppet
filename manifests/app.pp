@@ -2,7 +2,8 @@ define idm::app (
   $vcs_url,
   $app_package,
   $server_name,
-  $additional_environment = []
+  $flower_port,
+  $additional_environment = [],
 ) {
   $home = "/srv/idm-${name}"
   $user = "idm_${name}"
@@ -16,6 +17,7 @@ define idm::app (
   $env_file = "$home/env.sh"
   $keytab = "$home/krb5.keytab"
   $systemd_celery_service = "/etc/systemd/system/idm-$name-celery.service"
+  $systemd_flower_service = "/etc/systemd/system/idm-$name-flower.service"
 
   $fixture = "$home/fixture.yaml"
 
@@ -120,6 +122,9 @@ define idm::app (
       directories => [
         { path => $static_root, require => "all granted" },
       ],
+      proxy_pass => [
+        { path => '/flower', url => "http://localhost:$flower_port/"}
+      ]
       require => Exec["create-ssl-cert"];
   }
 
@@ -130,6 +135,10 @@ define idm::app (
       require => Package["python-virtualenv"];
     "idm-${name}-install-requirements":
       command => "$venv/bin/pip install -r $repo/requirements.txt",
+      require => Vcsrepo[$repo],
+      subscribe => Exec["idm-${name}-create-virtualenv"];
+    "idm-${name}-install-additional":
+      command => "$venv/bin/pip install flower",
       require => Vcsrepo[$repo],
       subscribe => Exec["idm-${name}-create-virtualenv"];
     "idm-${name}-collectstatic":
@@ -173,6 +182,8 @@ define idm::app (
       ensure => directory;
     $systemd_celery_service:
       content => template("idm/celery.service.erb");
+    $systemd_flower_service:
+      content => template("idm/flower.service.erb");
     $env_file:
       content => template("idm/env.sh.erb");
     "/var/log/idm-${name}-celery.log":
@@ -190,6 +201,9 @@ define idm::app (
     "idm-$name-celery":
       ensure => running,
       require => [File[$systemd_celery_service], Exec["idm-${name}-initial-fixtures"]];
+    "idm-$name-flower":
+      ensure => running,
+      require => File[$systemd_flower_service];
   }
 
   postgresql::server::database { $user:
