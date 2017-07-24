@@ -123,7 +123,7 @@ define idm::app (
         { path => $static_root, require => "all granted" },
       ],
       proxy_pass => [
-        { path => '/flower', url => "http://localhost:$flower_port/"}
+        { path => '/flower/', url => "http://localhost:$flower_port/"}
       ],
       require => Exec["create-ssl-cert"];
   }
