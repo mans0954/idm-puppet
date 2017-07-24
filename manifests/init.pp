@@ -47,7 +47,7 @@ class idm (
         "OIDC_AUTHORIZATION_ENDPOINT=https://$auth_server_name/openid/authorize/",
         "OIDC_TOKEN_ENDPOINT=https://$auth_server_name/openid/token/",
         "OIDC_USERINFO_ENDPOINT=https://$auth_server_name/openid/userinfo/",
-        "OIDC_JWKS_URL=https://$auth_server_name/openid/jwks/",
+        "OIDC_JWKS_URI=https://$auth_server_name/openid/jwks/",
         "OIDC_CLIENT_ID=$core_oidc_client_id",
         "OIDC_CLIENT_SECRET=$core_oidc_client_secret",
       ];
