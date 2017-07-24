@@ -3,7 +3,7 @@ Description=Flower Service for <%= @user %>
 After=network-online.target
 
 [Service]
-Type=forking
+Type=simple
 User=<%= @user %>
 Group=<%= @user %>
 EnvironmentFile=<%= @env_file %>
