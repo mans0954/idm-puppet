@@ -149,6 +149,16 @@ define idm::app (
       require => [Exec["idm-${name}-migrate"], File[$fixture]];
   }
 
+  if ($name == "auth") {
+    exec {
+    "idm-${name}-create-rsa-key":
+      command => "$manage_py creatersakey",
+      user => $user,
+      unless => "/bin/usr/test \"/usr/bin/psql -c 'select count(*) from oidc_provider_rsakey' -At\" != \"0\"",
+      provider => shell;
+    }
+  }
+
   file {
     $wsgi:
       content => template('idm/env.py.erb', 'idm/app.wsgi.erb'),
