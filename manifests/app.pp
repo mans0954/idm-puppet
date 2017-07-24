@@ -130,7 +130,8 @@ define idm::app (
       require => Package["python-virtualenv"];
     "idm-${name}-install-requirements":
       command => "$venv/bin/pip install -r $repo/requirements.txt",
-      require => [Exec["idm-${name}-create-virtualenv"], Vcsrepo[$repo]];
+      require => [Exec["idm-${name}-create-virtualenv"], Vcsrepo[$repo]],
+      subscribe => Exec["idm-${name}-create-virtualenv"];
     "idm-${name}-collectstatic":
       command => "$manage_py collectstatic --no-input",
       require => [Exec["idm-${name}-install-requirements"], File[$manage_py]];
@@ -146,7 +147,8 @@ define idm::app (
     "idm-${name}-load-fixture":
       command => "$manage_py loaddata $fixture",
       user => $user,
-      require => [Exec["idm-${name}-migrate"], File[$fixture]];
+      require => [Exec["idm-${name}-migrate"], File[$fixture]],
+      subscribe => File[$fixture];
   }
 
   if ($name == "auth") {
