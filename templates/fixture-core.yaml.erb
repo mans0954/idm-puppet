@@ -20,15 +20,3 @@
     identity_id: 4ff517c5-532f-42ee-afb1-a5d3da2f61d5
     identity_content_type: [application, application]
     principal_name: api/<%= scope.lookupvar('idm::auth_server_name') %>@<%= scope.lookupvar('idm::realm') %>
-
-- model: oidc_auth.OpenIDProvider
-  pk: 1
-  fields:
-    issuer: https://<%= scope.lookupvar('idm::auth_server_name') %>/
-    authorization_endpoint: https://<%= scope.lookupvar('idm::auth_server_name') %>/openid/authorize/
-    token_endpoint: https://<%= scope.lookupvar('idm::auth_server_name') %>/openid/token/
-    userinfo_endpoint: https://<%= scope.lookupvar('idm::auth_server_name') %>/openid/userinfo/
-    jwks_uri: https://<%= scope.lookupvar('idm::auth_server_name') %>/openid/jwks/
-    signing_alg: RS256
-    client_id: <%= scope.lookupvar('idm::core_oidc_client_id') %>
-    client_secret: <%= scope.lookupvar('idm::core_oidc_client_secret') %>
