@@ -24,6 +24,7 @@ class idm (
     ensure => installed
   }
   include idm::broker
+  include idm::linotp
   class { idm::kerberos:
     realm => $realm,
     domain_realms => hiera('idm::kerberos::domain_realms', [$base_domain])
