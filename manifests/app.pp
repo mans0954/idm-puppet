@@ -154,7 +154,7 @@ define idm::app (
     "idm-${name}-create-rsa-key":
       command => "$manage_py creatersakey",
       user => $user,
-      unless => "/usr/bin/test \"$(/usr/bin/psql -c 'select count(*) from oidc_provider_rsakey' -At)\" != \"1\"",
+      unless => "/usr/bin/test \"$(/usr/bin/psql -c 'select count(*) from oidc_provider_rsakey' -At)\" != \"0\"",
       require => Exec["idm-${name}-migrate"],
       provider => shell;
     }
