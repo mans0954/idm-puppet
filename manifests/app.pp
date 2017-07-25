@@ -18,6 +18,7 @@ define idm::app (
   $keytab = "$home/krb5.keytab"
   $systemd_celery_service = "/etc/systemd/system/idm-$name-celery.service"
   $systemd_flower_service = "/etc/systemd/system/idm-$name-flower.service"
+  $systemd_broker_task_consumer_service = "/etc/systemd/system/idm-$name-broker-task-consumer.service"
 
   $fixture = "$home/fixture.yaml"
 
@@ -184,6 +185,8 @@ define idm::app (
       content => template("idm/celery.service.erb");
     $systemd_flower_service:
       content => template("idm/flower.service.erb");
+    $systemd_broker_task_consumer_service:
+      content => template("idm/broker-task-consumer.service.erb");
     $env_file:
       content => template("idm/env.sh.erb");
     "/var/log/idm-${name}-celery.log":
@@ -204,6 +207,9 @@ define idm::app (
     "idm-$name-flower":
       ensure => running,
       require => File[$systemd_flower_service];
+    "idm-$name-broker-task-consumer":
+      ensure => running,
+      require => File[$systemd_broker_task_consumer_service];
   }
 
   postgresql::server::database { $user:

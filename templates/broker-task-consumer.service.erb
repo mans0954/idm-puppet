@@ -1,0 +1,14 @@
+[Unit]
+Description=Broker Task Consumer Service for <%= @user %>
+After=network-online.target
+
+[Service]
+Type=simple
+User=<%= @user %>
+Group=<%= @user %>
+EnvironmentFile=<%= @env_file %>
+WorkingDirectory=<%= @home %>
+ExecStart=<%= @venv %>/bin/django-admin.py broker_task_consumer
+
+[Install]
+WantedBy=multi-user.target
