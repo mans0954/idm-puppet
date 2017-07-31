@@ -23,3 +23,17 @@
     jwt_alg: RS256
     require_consent: false
     date_created: 1970-01-01T00:00:00
+
+- model: oidc_provider.Client
+  pk: 2
+  fields:
+    name: 'University of Oxford Card Management'
+    client_id: <%= scope.lookupvar('idm::card_oidc_client_id') %>
+    client_secret: <%= scope.lookupvar('idm::card_oidc_client_secret') %>
+    response_type: code
+    _redirect_uris: https://<%= scope.lookupvar('idm::card_server_name') %>/oidc/complete/
+    client_type: confidential
+    jwt_alg: RS256
+    require_consent: false
+    date_created: 1970-01-01T00:00:00
+
