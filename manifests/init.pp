@@ -38,6 +38,7 @@ class idm (
     alt_names => [
       $core_server_name,
       $auth_server_name,
+      $card_server_name,
     ]
   }
 
