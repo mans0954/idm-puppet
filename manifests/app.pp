@@ -121,7 +121,7 @@ define idm::app (
       directories => [
         { path => $static_root, require => "all granted" },
         {
-          provider => "Location",
+          provider => "location",
           path => "/api/",
           auth_type => "GSSAPI",
           require => "valid-user",
