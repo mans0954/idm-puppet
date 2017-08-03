@@ -22,6 +22,8 @@ class idm::kerberos (
       content => template('idm/krb5.conf.erb');
     "/etc/krb5kdc/":
       ensure => directory;
+    "/etc/krb5/":
+      ensure => directory;
     $kdc_conf:
       content => template('idm/kdc.conf.erb');
     $kadm5_acl:

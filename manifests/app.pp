@@ -24,7 +24,6 @@ define idm::app (
 
   # Principal names
   $client_principal_name = "api/$server_name"
-  $http_principal_name = "HTTP/$server_name"
   $kadmin_principal_name = "$server_name/admin"
 
   # Secrets
@@ -123,6 +122,14 @@ define idm::app (
       directories => [
         { path => $static_root, require => "all granted" },
       ],
+      locations => [
+        {
+          path => "/api/",
+          auth_type => "GSSAPI",
+          GssapiCredStore => "keytab:${idm::web::http_keytab}",
+          require => "valid-user",
+        },
+      ]
       proxy_pass => [
         { path => '/flower/', url => "http://localhost:$flower_port/"}
       ],
@@ -221,13 +228,9 @@ define idm::app (
 
   $principals = [
     $client_principal_name,
-    $http_principal_name,
   ] + ($name ? {
     auth => [
       $kadmin_principal_name,
-    ],
-    core => [
-      "HTTP/$fqdn",
     ],
     default => [],
   })

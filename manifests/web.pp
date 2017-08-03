@@ -1,6 +1,14 @@
 class idm::web (
   $alt_names = [],
 ){
+  $required_packages = [
+    "libapache2-mod-auth-gssapi",
+  ]
+
+  package { $required_packages:
+    ensure => installed;
+  }
+
   $ssl_conf = "/root/cert.conf"
   $ssl_cert = "/etc/ssl/certs/$fqdn.crt"
   $ssl_key = "/etc/ssl/private/$fqdn.pem"
@@ -32,5 +40,14 @@ class idm::web (
   class { 'apache::mod::wsgi':
     package_name => "libapache2-mod-wsgi-py3",
     mod_path => "mod_wsgi.so"
+  }
+
+  $http_keytab = "/etc/krb5/HTTP.$fqdn.keytab"
+
+  idm::kerberos::keytab {
+    $http_keytab:
+      owner => "www-data",
+      group => "www-data",
+      principals => ["HTTP/$fqdn"],
   }
 }
