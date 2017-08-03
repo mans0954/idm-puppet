@@ -117,7 +117,6 @@ define idm::app (
       },
       wsgi_process_group          => "idm-${name}",
       wsgi_script_aliases         => { '/' => $wsgi },
-      wsgi_pass_authorization => 'On',
       aliases => [ { alias => '/static', path => $static_root } ],
       directories => [
         { path => $static_root, require => "all granted" },
