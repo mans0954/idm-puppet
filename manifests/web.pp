@@ -1,12 +1,8 @@
 class idm::web (
   $alt_names = [],
 ){
-  $required_packages = [
-    "libapache2-mod-auth-gssapi",
-  ]
-
-  package { $required_packages:
-    ensure => installed;
+  apache::mod { "auth_gssapi":
+    package => "libapache2-mod-auth-gssapi",
   }
 
   $ssl_conf = "/root/cert.conf"
