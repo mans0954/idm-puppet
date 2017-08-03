@@ -120,9 +120,8 @@ define idm::app (
       aliases => [ { alias => '/static', path => $static_root } ],
       directories => [
         { path => $static_root, require => "all granted" },
-      ],
-      locations => [
         {
+          provider => "Location",
           path => "/api/",
           auth_type => "GSSAPI",
           require => "valid-user",
