@@ -125,8 +125,10 @@ define idm::app (
         {
           path => "/api/",
           auth_type => "GSSAPI",
-          GssapiCredStore => "keytab:${idm::web::http_keytab}",
           require => "valid-user",
+          custom_fragment => "
+              GssapiCredStore keytab:${idm::web::http_keytab}
+          ",
         },
       ],
       proxy_pass => [
