@@ -131,8 +131,8 @@ define idm::app (
         },
       ] + ($name ? {
         "auth" => [{
-          provider => "location",
-          path => "~/openid/(token|userinfo)/",
+          provider => "locationmatch",
+          path => "/openid/(token|userinfo)/",
           custom_fragment => "WSGIPassAuthorization On",
         }],
         default => [],
