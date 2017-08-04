@@ -98,7 +98,7 @@ define idm::app (
       port => 80,
       docroot => "$home/docroot",
       redirect_status => 'permanent',
-      redirect_dest   => "https://${name}.${idm::base_domain}/";
+      redirect_dest   => "https://${server_name}/";
     "idm-${name}-ssl":
       servername => $server_name,
       port => 443,
