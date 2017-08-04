@@ -29,7 +29,7 @@ class idm (
     ensure => installed
   }
   include idm::broker
-  include idm::firewall::init
+  include idm::firewall
   include idm::linotp
   class { idm::kerberos:
     realm => $realm,
