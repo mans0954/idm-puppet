@@ -129,7 +129,14 @@ define idm::app (
               GssapiCredStore keytab:${idm::web::http_keytab}
           ",
         },
-      ],
+      ] + ($name ? {
+        "auth" => [{
+          provider => "location",
+          path => "~/openid/(token|userinfo)/",
+          custom_fragment => "WSGIPassAuthorization On",
+        }],
+        default => [],
+      }),
       proxy_pass => [
         { path => '/flower/', url => "http://localhost:$flower_port/"}
       ],
