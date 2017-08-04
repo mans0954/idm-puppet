@@ -20,3 +20,9 @@
     identity_id: 4ff517c5-532f-42ee-afb1-a5d3da2f61d5
     identity_content_type: [application, application]
     principal_name: api/<%= scope.lookupvar('idm::auth_server_name') %>@<%= scope.lookupvar('idm::realm') %>
+
+- model: application.ManageableContentType
+  pk: 1
+  fields:
+    application_id: 4ff517c5-532f-42ee-afb1-a5d3da2f61d5
+    content_type: [contact, onlineaccount]
