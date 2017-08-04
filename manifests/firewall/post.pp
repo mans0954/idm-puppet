@@ -1,7 +1,7 @@
 class idm::firewall::post {
   hiera("firewall::allow_ssh_from").each |Integer $index, String $source| {
     firewall {
-      "100 allow SSH %index":
+      "100 allow SSH $index":
         dport  => 22,
         proto  => "tcp",
         action => "accept",
@@ -11,7 +11,7 @@ class idm::firewall::post {
 
   hiera("firewall::allow_http_from").each |Integer $index, String $source| {
     firewall {
-      "100 allow HTTP and HTTPS":
+      "100 allow HTTP and HTTPS $index":
         dport  => [80, 443],
         proto  => "tcp",
         action => "accept",
