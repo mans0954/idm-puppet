@@ -5,7 +5,7 @@ class idm::firewall::post {
       proto => "tcp",
       action => "accept",
       source => hiera("firewall::allow_ssh_from");
-    "100 allow JTTP and HTTPS":
+    "100 allow HTTP and HTTPS":
       dport => [80, 443],
       proto => "tcp",
       action => "accept",
