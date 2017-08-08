@@ -193,6 +193,8 @@ define idm::app (
       $wsgi:
         content => template('idm/env.py.erb', 'idm/app.wsgi.erb'),
         notify  => Apache::Vhost["idm-${name}-ssl"];
+      $fixture:
+        content => template("idm/fixture-$name.yaml.erb");
     }
   }
 
@@ -228,8 +230,6 @@ define idm::app (
       owner => $user,
       group => $user,
       mode => "600";
-    $fixture:
-      content => template("idm/fixture-$name.yaml.erb");
   }
 
   service {
