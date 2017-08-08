@@ -107,7 +107,10 @@ define idm::app (
       ssl => true,
       ssl_cert => $idm::web::ssl_cert,
       ssl_key => $idm::web::ssl_key,
-      wsgi_daemon_process         => ($wsgi_app ? {true => "idm-${name}", false => undef}),
+      wsgi_daemon_process => ($wsgi_app ? {
+        true => "idm-${name}",
+        default => undef,
+      }),
       wsgi_daemon_process_options => {
         processes => '2',
         threads => '15',
@@ -116,8 +119,14 @@ define idm::app (
         user => $user,
         group => $user,
       },
-      wsgi_process_group          => ($wsgi_app ? {true => "idm-${name}",, false => undef}),
-      wsgi_script_aliases         => ($wsgi_app ? {true => { '/' => $wsgi }, false => undef }),
+      wsgi_process_group => ($wsgi_app ? {
+        true => "idm-${name}",
+        default => undef,
+      }),
+      wsgi_script_aliases  => ($wsgi_app ? {
+        true => { '/' => $wsgi },
+        default => undef,
+      }),
       aliases => [ { alias => '/static', path => $static_root } ],
       directories => [
         { path => $static_root, require => "all granted" },
