@@ -4,6 +4,7 @@ define idm::app (
   $server_name,
   $flower_port,
   $additional_environment = [],
+  $wsgi_app = true,
 ) {
   $home = "/srv/idm-${name}"
   $user = "idm_${name}"
@@ -106,7 +107,7 @@ define idm::app (
       ssl => true,
       ssl_cert => $idm::web::ssl_cert,
       ssl_key => $idm::web::ssl_key,
-      wsgi_daemon_process         => "idm-${name}",
+      wsgi_daemon_process         => $wsgi_app ? {true => "idm-${name}", false => undef},
       wsgi_daemon_process_options => {
         processes => '2',
         threads => '15',
@@ -115,8 +116,8 @@ define idm::app (
         user => $user,
         group => $user,
       },
-      wsgi_process_group          => "idm-${name}",
-      wsgi_script_aliases         => { '/' => $wsgi },
+      wsgi_process_group          => $wsgi_app ? {true => "idm-${name}",, false => undef},
+      wsgi_script_aliases         => $wsgi_app ? {true => { '/' => $wsgi }, false => undef },
       aliases => [ { alias => '/static', path => $static_root } ],
       directories => [
         { path => $static_root, require => "all granted" },
@@ -145,34 +146,45 @@ define idm::app (
 
   exec {
     "idm-${name}-create-virtualenv":
-      unless => "/usr/bin/test -d $venv",
+      unless  => "/usr/bin/test -d $venv",
       command => "/usr/bin/virtualenv $venv --python=/usr/bin/python3",
       require => Package["python-virtualenv"];
     "idm-${name}-install-requirements":
-      command => "$venv/bin/pip install -r $repo/requirements.txt",
-      require => Vcsrepo[$repo],
+      command   => "$venv/bin/pip install -r $repo/requirements.txt",
+      require   => Vcsrepo[$repo],
       subscribe => Exec["idm-${name}-create-virtualenv"];
     "idm-${name}-install-additional":
-      command => "$venv/bin/pip install flower",
-      require => Vcsrepo[$repo],
+      command   => "$venv/bin/pip install flower",
+      require   => Vcsrepo[$repo],
       subscribe => Exec["idm-${name}-create-virtualenv"];
-    "idm-${name}-collectstatic":
-      command => "$manage_py collectstatic --no-input",
-      require => [Exec["idm-${name}-install-requirements"], File[$manage_py]];
-    "idm-${name}-migrate":
-      command => "$manage_py migrate",
-      user => $user,
-      require => [Exec["idm-${name}-install-requirements"], Postgresql::Server::Database[$user], File[$manage_py]];
-    "idm-${name}-initial-fixtures":
-      command => "$manage_py loaddata initial",
-      returns => [0, 1], # Don't worry if there are actually no such fixtures
-      user => $user,
-      require => Exec["idm-${name}-migrate"];
-    "idm-${name}-load-fixture":
-      command => "$manage_py loaddata $fixture",
-      user => $user,
-      require => Exec["idm-${name}-migrate"],
-      subscribe => File[$fixture];
+  }
+
+  if ($wsgi_app) {
+    exec {
+      "idm-${name}-collectstatic":
+        command => "$manage_py collectstatic --no-input",
+        require => [Exec["idm-${name}-install-requirements"], File[$manage_py]];
+      "idm-${name}-migrate":
+        command => "$manage_py migrate",
+        user    => $user,
+        require => [Exec["idm-${name}-install-requirements"], Postgresql::Server::Database[$user], File[$manage_py]];
+      "idm-${name}-initial-fixtures":
+        command => "$manage_py loaddata initial",
+        returns => [0, 1], # Don't worry if there are actually no such fixtures
+        user    => $user,
+        require => Exec["idm-${name}-migrate"];
+      "idm-${name}-load-fixture":
+        command   => "$manage_py loaddata $fixture",
+        user      => $user,
+        require   => Exec["idm-${name}-migrate"],
+        subscribe => File[$fixture];
+    }
+
+    file {
+      $wsgi:
+        content => template('idm/env.py.erb', 'idm/app.wsgi.erb'),
+        notify  => Apache::Vhost["idm-${name}-ssl"];
+    }
   }
 
   if ($name == "auth") {
@@ -187,9 +199,6 @@ define idm::app (
   }
 
   file {
-    $wsgi:
-      content => template('idm/env.py.erb', 'idm/app.wsgi.erb'),
-      notify => Apache::Vhost["idm-${name}-ssl"];
     $manage_py:
       content => template('idm/venv-python-hashbang.erb', 'idm/env.py.erb', 'idm/manage.py.erb'),
       mode => '755';

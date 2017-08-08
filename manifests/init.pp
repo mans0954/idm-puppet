@@ -83,5 +83,12 @@ class idm (
         "OIDC_CLIENT_ID=$card_oidc_client_id",
         "OIDC_CLIENT_SECRET=$card_oidc_client_secret",
       ];
+    integration:
+      app_package => "idm_integration",
+      vcs_url => "https://github.com/alexsdutton/idm-integration",
+      server_name => $auth_server_name,
+      wsgi_app => false,
+      flower_port => 5558,
+      additional_environment => $additional_environment;
   }
 }
