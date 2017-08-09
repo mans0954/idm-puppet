@@ -23,10 +23,12 @@ class idm::solr {
   concat::fragment {
     "solr-xml-header":
       target => $solr_xml,
-      content => template('idm/solr.xml-header.erb');
+      content => template('idm/solr.xml-header.erb'),
+      order => "01";
     "solr-xml-footer":
       target => $solr_xml,
-      content => template('idm/solr.xml-footer.erb');
+      content => template('idm/solr.xml-footer.erb'),
+      order => "99";
   }
 
   define core() {
@@ -67,7 +69,8 @@ class idm::solr {
     concat::fragment {
       "solr-xml-core-$name":
         target => $idm::solr::solr_xml,
-        content => template('idm/solr.xml-core.erb')
+        content => template('idm/solr.xml-core.erb'),
+        order => "02";
     }
   }
 }
