@@ -12,7 +12,7 @@ class idm::solr {
   }
 
   package { $required_packages:
-    require => installed;
+    ensure => installed;
   }
 
   concat {
