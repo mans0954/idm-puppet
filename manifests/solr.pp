@@ -3,7 +3,7 @@ class idm::solr {
   $core_dir = "/etc/solr/core"
 
   $required_packages = [
-    "tomcat-solr",
+    "solr-tomcat",
   ]
 
   file {
