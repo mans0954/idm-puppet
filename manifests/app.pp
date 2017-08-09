@@ -5,6 +5,7 @@ define idm::app (
   $flower_port,
   $additional_environment = [],
   $wsgi_app = true,
+  $solr_core = false,
 ) {
   $home = "/srv/idm-${name}"
   $user = "idm_${name}"
@@ -267,4 +268,17 @@ define idm::app (
       principals => $principals
   }
 
+  if ($solr_core) {
+    $schema_xml = "/etc/solr/core/idm-$name/schema.xml"
+
+    idm::solr::core {
+      "idm-$name":
+    }
+
+    exec { "build-solr-schema-$name":
+      command => "$manage_py build_solr_schema > $schema_xml",
+      user    => $user,
+      creates => $schema_xml,
+    }
+  }
 }

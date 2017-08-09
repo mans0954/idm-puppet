@@ -32,6 +32,8 @@ class idm (
   include idm::broker
   include idm::firewall
   include idm::linotp
+  include idm::solr
+
   class { idm::kerberos:
     realm => $realm,
     domain_realms => hiera('idm::kerberos::domain_realms', [$base_domain])
@@ -65,6 +67,7 @@ class idm (
       vcs_url => "https://github.com/alexsdutton/idm-core",
       server_name => $core_server_name,
       flower_port => 5555,
+      solr_core => true,
       additional_environment => $additional_environment + [
         "OIDC_CLIENT_ID=$core_oidc_client_id",
         "OIDC_CLIENT_SECRET=$core_oidc_client_secret",
