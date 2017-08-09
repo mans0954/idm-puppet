@@ -31,7 +31,9 @@ class idm::solr {
       order => "99";
   }
 
-  define core() {
+  define core(
+    $schema_xml,
+  ) {
     $core_dir = "${idm::solr::core_dir}/$name"
     $conf_dir = "$core_dir/conf"
 
@@ -64,6 +66,9 @@ class idm::solr {
     file {
       [$core_dir, $conf_dir]:
         ensure => directory;
+      "$conf_dir/schema.xml":
+        ensure => file,
+        source => $schema_xml;
     }
 
     concat::fragment {

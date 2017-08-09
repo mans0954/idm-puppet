@@ -269,17 +269,21 @@ define idm::app (
   }
 
   if ($solr_core) {
-    $schema_xml = "/etc/solr/core/idm-$name/schema.xml"
+    $schema_xml = "$home/solr-schema.xml"
 
-    idm::solr::core {
-      "idm-$name":
-    }
-
-    exec { "build-solr-schema-$name":
+    exec { "idm-$name-build-solr-schema":
       command => "$manage_py build_solr_schema > $schema_xml",
       user    => $user,
       creates => $schema_xml,
-      require => File["/etc/solr/core/idm-$name"]
+      require => File["/etc/solr/core/idm-$name"];
     }
+
+    idm::solr::core {
+      "idm-$name":
+        schema_xml => $schema_xml,
+    }
+
+    Exec["idm-${name}-install-requirements"] -> Exec["idm-$name-build-solr-schema"] -> Idm::Solr::Core["idm-$name"]
+
   }
 }
