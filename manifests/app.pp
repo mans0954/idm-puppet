@@ -235,7 +235,7 @@ define idm::app (
   service {
     "idm-$name-celery":
       ensure => running,
-      require => [File[$systemd_celery_service], Exec["idm-${name}-initial-fixtures"]];
+      require => File[$systemd_celery_service];
     "idm-$name-flower":
       ensure => running,
       require => File[$systemd_flower_service];
