@@ -274,8 +274,7 @@ define idm::app (
     exec { "idm-$name-build-solr-schema":
       command => "$manage_py build_solr_schema > $schema_xml",
       user    => $user,
-      creates => $schema_xml,
-      require => File["/etc/solr/core/idm-$name"];
+      creates => $schema_xml;
     }
 
     idm::solr::core {
