@@ -16,7 +16,7 @@ class idm (
   $core_server_name = hiera('idm::core::server_name', "core.${base_domain}")
   $auth_server_name = hiera('idm::auth::server_name', "auth.${base_domain}")
   $card_server_name = hiera('idm::card::server_name', "card.${base_domain}")
-  $integration_server_name = hiera('idm::card::server_name', "card.${base_domain}")
+  $integration_server_name = hiera('idm::integration::server_name', "integration.${base_domain}")
 
   $core_oidc_client_id = hiera('idm::core::oidc::client_id')
   $core_oidc_client_secret = hiera('idm::core::oidc::client_secret')
