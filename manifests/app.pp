@@ -59,6 +59,11 @@ define idm::app (
       "KADMIN_PRINCIPAL_NAME=$kadmin_principal_name",
     ],
     default => [],
+  }) + ($solr_core ? {
+    true => [
+      "HAYSTACK_SOLR_URL=http://localhost:8080/solr/idm-$name",
+    ],
+    default => [],
   })+ $additional_environment + hiera_array("idm::${name}::additional_environment", [])
 
   user {
