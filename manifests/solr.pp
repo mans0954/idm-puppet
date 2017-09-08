@@ -8,7 +8,8 @@ class idm::solr {
 
   file {
     $core_dir:
-      ensure => directory;
+      ensure => directory,
+      require => Package["solr-tomcat"];
   }
 
   package { $required_packages:
