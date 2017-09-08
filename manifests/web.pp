@@ -1,5 +1,6 @@
 class idm::web (
   $alt_names = [],
+  $self_signed_cert = true,
 ){
   apache::mod { "auth_gssapi":
     package => "libapache2-mod-auth-gssapi",
@@ -13,21 +14,31 @@ class idm::web (
     content => template('idm/cert.conf.erb');
   }
 
-  exec {
-    "create-ssl-cert":
-      command => "/usr/bin/openssl req -x509 -config $ssl_conf -newkey rsa:4096 -keyout $ssl_key -out $ssl_cert -days 3650 -nodes -extensions v3_req",
-      creates => $ssl_cert;
-    "copy-ssl-cert":
-      command => "/bin/cp $ssl_cert /usr/share/ca-certificates/";
-    "add-cert-to-ca-certificates":
-      command => "/bin/echo '$fqdn.crt' >> /etc/ca-certificates.conf",
-      unless => "/bin/grep $fqdn.crt /etc/ca-certificates.conf",
-      provider => "shell";
-    "update-ca-certificates":
-      command => "/usr/sbin/update-ca-certificates";
+  if ($self_signed_cert) {
+    exec {
+      "create-ssl-cert":
+        command => "/usr/bin/openssl req -x509 -config $ssl_conf -newkey rsa:4096 -keyout $ssl_key -out $ssl_cert -days 3650 -nodes -extensions v3_req",
+        creates => $ssl_cert;
+      "copy-ssl-cert":
+        command => "/bin/cp $ssl_cert /usr/share/ca-certificates/";
+      "add-cert-to-ca-certificates":
+        command  => "/bin/echo '$fqdn.crt' >> /etc/ca-certificates.conf",
+        unless   => "/bin/grep $fqdn.crt /etc/ca-certificates.conf",
+        provider => "shell";
+      "update-ca-certificates":
+        command => "/usr/sbin/update-ca-certificates";
+    }
+
+    File[$ssl_conf] ~> Exec["create-ssl-cert", "add-cert-to-ca-certificates"] ~> Exec["copy-ssl-cert"] ~> Exec["update-ca-certificates"]
+  } else {
+    exec {
+      "create-ssl-cert":
+        command => "/usr/bin/openssl req -x509 -config $ssl_conf -newkey rsa:4096 -keyout $ssl_key -nodes -extensions v3_req",
+        creates => $ssl_cert;
+    }
+
   }
 
-  File[$ssl_conf] ~> Exec["create-ssl-cert", "add-cert-to-ca-certificates"] ~> Exec["copy-ssl-cert"] ~> Exec["update-ca-certificates"]
 
   class { "apache":
     #default_vhost => false

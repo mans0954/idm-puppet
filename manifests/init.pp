@@ -44,7 +44,8 @@ class idm (
       $auth_server_name,
       $card_server_name,
       $integration_server_name,
-    ]
+    ],
+    self_signed_cert => hiera('idm::web::self_signed_cert', true),
   }
 
   $additional_environment = [
