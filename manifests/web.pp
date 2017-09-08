@@ -9,6 +9,7 @@ class idm::web (
   $ssl_conf = "/root/cert.conf"
   $ssl_cert = "/etc/ssl/certs/$fqdn.crt"
   $ssl_key = "/etc/ssl/private/$fqdn.pem"
+  $ssl_csr = "/root/cert.csr"
 
   file { $ssl_conf:
     content => template('idm/cert.conf.erb');
@@ -33,8 +34,8 @@ class idm::web (
   } else {
     exec {
       "create-ssl-cert":
-        command => "/usr/bin/openssl req -x509 -config $ssl_conf -newkey rsa:4096 -keyout $ssl_key -nodes -extensions v3_req",
-        creates => $ssl_cert;
+        command => "/usr/bin/openssl req -new -keyout $ssl_key -out $ssl_csr -config $ssl_conf -batch -verbose -nodes",
+        creates => $ssl_csr;
     }
 
   }
