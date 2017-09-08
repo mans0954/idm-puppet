@@ -43,6 +43,7 @@ class idm (
       $core_server_name,
       $auth_server_name,
       $card_server_name,
+      $integration_server_name,
     ]
   }
 
