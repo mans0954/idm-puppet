@@ -6,7 +6,13 @@ This puppet module installs and configures [the proof-of-concept IdM](https://gi
 ## Getting started
 
 First, install Puppet (`apt-get install puppet`) and then follow the instructions for setting up
-[librarian-puppet](https://github.com/voxpupuli/librarian-puppet).
+[librarian-puppet](https://github.com/voxpupuli/librarian-puppet). In summary:
+
+```shell
+apt-get install puppet
+gem install librarian-puppet
+librarian-puppet init
+```
 
 Your `Puppetfile` (`/usr/share/puppet/Puppetfile`) should contain something like:
 
@@ -80,10 +86,18 @@ node default {
 }
 ```
 
-When this is all done, run::
+When this is all done, run:
 
 ```shell
-librarian-puppet update alexsdutton-idm ; puppet apply /etc/puppet/manifests/site.pp
+librarian-puppet install
+puppet apply /etc/puppet/manifests/site.pp
+```
+
+And on subsequent runs:
+
+```shell
+librarian-puppet update alexsdutton-idm
+puppet apply /etc/puppet/manifests/site.pp
 ```
 
 If it doesn't succeed first time, create an issue with the error, and try it another time or two.
