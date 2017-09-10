@@ -240,13 +240,10 @@ define idm::app (
 
   service {
     "idm-$name-celery":
-      ensure => running,
       require => File[$systemd_celery_service];
     "idm-$name-flower":
-      ensure => running,
       require => File[$systemd_flower_service];
     "idm-$name-broker-task-consumer":
-      ensure => running,
       require => File[$systemd_broker_task_consumer_service];
   }
 
