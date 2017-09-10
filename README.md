@@ -75,27 +75,30 @@ idm::integration::server_name: idm-demo-integration.it.ox.ac.uk
 idm::web:self_signed_cert: true
 ```
 
-You'll want to replace every `[secret]` with a randomly-generated secret (using e.g. `pwgen 32`).
+You'll want to replace each `[secret]` with a randomly-generated secret (using e.g. `pwgen 32`).
 
 Finally, create your main Puppet manifest, `/etc/puppet/manifests/site.pp`:
 
 ```puppet
 node default {
-    class { idm:
-    }
+    include idm
 }
 ```
 
 When this is all done, run:
 
 ```shell
+cd /usr/share/puppet/
 librarian-puppet install
 puppet apply /etc/puppet/manifests/site.pp
 ```
 
+(`librarian-puppet` needs to be run in `/usr/share/puppet/` as it works relative to the current directory)
+
 And on subsequent runs:
 
 ```shell
+cd /usr/share/puppet/
 librarian-puppet update alexsdutton-idm
 puppet apply /etc/puppet/manifests/site.pp
 ```
