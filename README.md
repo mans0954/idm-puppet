@@ -62,11 +62,6 @@ idm::auth::additional_environment:
   - SMTP_SERVER=smtp.ox.ac.uk
   - DJANGO_ADMINS=First Last <someone@example.org>
 
-# Firewall rules
-firewall::allow_ssh_from: ['163.1.124.0/23', '129.67.100.0/22']
-firewall::allow_http_from: ['163.1.0.0/16', '129.67.0.0/16']
-
-
 idm::core::server_name: idm-demo-core.it.ox.ac.uk
 idm::card::server_name: idm-demo-card.it.ox.ac.uk
 idm::auth::server_name: idm-demo-auth.it.ox.ac.uk
