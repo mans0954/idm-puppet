@@ -178,11 +178,16 @@ define idm::app (
     exec {
       "idm-${name}-collectstatic":
         command => "$manage_py collectstatic --no-input",
-        require => [Exec["idm-${name}-install-requirements"], File[$manage_py]];
+        require => [Exec["idm-${name}-install-requirements"],
+                    File[$manage_py],
+                    Service["rabbitmq-server"]];
       "idm-${name}-migrate":
         command => "$manage_py migrate",
         user    => $user,
-        require => [Exec["idm-${name}-install-requirements"], Postgresql::Server::Database[$user], File[$manage_py]];
+        require => [Exec["idm-${name}-install-requirements"],
+                    Postgresql::Server::Database[$user],
+                    File[$manage_py],
+                    Service["rabbitmq-server"]];
       "idm-${name}-initial-fixtures":
         command => "$manage_py loaddata initial",
         returns => [0, 1], # Don't worry if there are actually no such fixtures
