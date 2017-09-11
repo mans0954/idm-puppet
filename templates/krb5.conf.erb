@@ -8,7 +8,7 @@
  renew_lifetime = 7d
  forwardable = true
  default_realm = <%= @realm %>
- default_ccache_name = KEYRING:persistent:%{uid}
+ default_ccache_name = <%= @default_ccache_name %>
 # rdns = false
 # ignore_acceptor_hostname = true
 # dns_canonicalize_hostname = false
