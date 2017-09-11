@@ -6,6 +6,7 @@ class idm::kerberos (
   $kdc_conf = "/etc/krb5kdc/kdc.conf"
   $kadm5_acl = "/etc/krb5kdc/kadm5.acl"
   $master_password = hiera('idm::kerberos::master_password')
+  $default_ccache_name = hiera('idm::kerberos::default_ccache_name', 'KEYRING:persistent:%{uid}')
 
   $required_packages = [
     "krb5-admin-server",
